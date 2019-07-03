@@ -1,6 +1,6 @@
 /*==============================================================*/
 /* DBMS name:      MySQL 5.0                                    */
-/* Created on:     2019/7/1 15:18:27                            */
+/* Created on:     2019/7/3 9:29:06                             */
 /*==============================================================*/
 
 
@@ -56,12 +56,16 @@ create table answer
 /*==============================================================*/
 create table class_segments
 (
-   classname            char(30) not null,
+   class_sec_id         int not null,
+   classname            char(30),
    classroom            varchar(30),
    begin_sec            int,
    end_sec              int,
    week                 int,
-   primary key (classname)
+   begin_week           int,
+   end_week             int,
+   oddOrEven            char(1),
+   primary key (class_sec_id)
 );
 
 /*==============================================================*/
@@ -89,8 +93,6 @@ create table course_class
    classname            char(30) not null,
    course_id            varchar(6),
    course_participants  int,
-   begin_week           int,
-   end_week             int,
    primary key (classname)
 );
 
