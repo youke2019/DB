@@ -1,3 +1,6 @@
+drop schema if exists yoke  ;
+create schema yoke;
+use yoke;
 /*==============================================================*/
 /* DBMS name:      MySQL 5.0                                    */
 /* Created on:     2019/7/3 9:29:06                             */
@@ -56,7 +59,7 @@ create table answer
 /*==============================================================*/
 create table class_segments
 (
-   class_sec_id         int not null,
+   class_sec_id         int not null auto_increment,
    classname            char(30),
    classroom            varchar(30),
    begin_sec            int,
@@ -64,7 +67,7 @@ create table class_segments
    week                 int,
    begin_week           int,
    end_week             int,
-   oddOrEven            char(1),
+   odd_or_even            char(1),
    primary key (class_sec_id)
 );
 
@@ -76,8 +79,8 @@ create table course
    course_id            varchar(6) not null,
    course_name          varchar(200),
    course_hours         int,
-   course_credits       int,
-   general              char(1),
+   course_credits       float,
+   general              boolean,
    general_type         varchar(20),
    primary key (course_id)
 );
@@ -87,11 +90,11 @@ create table course
 /*==============================================================*/
 create table course_class
 (
-   teacher_id           int,
-   teacher_name         varchar(10),
-   teachers             varchar(30),
+   teacher_id           char(10),
+   teacher_name         varchar(50),
+   teachers             varchar(300),
    classname            char(30) not null,
-   course_id            varchar(6),
+   course_id            varchar(10),
    course_participants  int,
    primary key (classname)
 );
