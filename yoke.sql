@@ -69,7 +69,7 @@ create table class_segments
    begin_week           int,
    end_week             int,
    odd_or_even          char(1),
-   primary key class_sec_id
+   primary key (class_sec_id)
 );
 
 /*==============================================================*/
@@ -97,7 +97,7 @@ create table course_class
    classname            char(30) not null,
    course_id            varchar(6),
    course_participants  int,
-   class_note           varchar(200),
+   class_note           varchar(1000),
    primary key (classname)
 );
 
