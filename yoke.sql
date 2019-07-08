@@ -69,7 +69,7 @@ create table class_segments
    begin_week           int,
    end_week             int,
    odd_or_even          char(1),
-   primary key (classname, class_sec_id)
+   primary key class_sec_id
 );
 
 /*==============================================================*/
