@@ -1,9 +1,10 @@
 drop schema if exists yoke;
 create schema yoke;
 use yoke;
+
 /*==============================================================*/
 /* DBMS name:      MySQL 5.0                                    */
-/* Created on:     2019/7/6 4:51:49                             */
+/* Created on:     2019/7/8 8:49:29                             */
 /*==============================================================*/
 
 
@@ -60,7 +61,7 @@ create table answer
 create table class_segments
 (
    classname            char(30) not null,
-   class_sec_id         int not null auto_increment,
+   class_sec_id         int not null,
    classroom            varchar(30),
    begin_sec            int,
    end_sec              int,
@@ -68,7 +69,7 @@ create table class_segments
    begin_week           int,
    end_week             int,
    odd_or_even          char(1),
-   primary key (class_sec_id)
+   primary key (classname, class_sec_id)
 );
 
 /*==============================================================*/
@@ -90,12 +91,13 @@ create table course
 /*==============================================================*/
 create table course_class
 (
-   teacher_id           varchar(30),
+   teacher_id           char(20),
    teacher_name         varchar(50),
    teachers             varchar(300),
    classname            char(30) not null,
    course_id            varchar(6),
    course_participants  int,
+   class_note           varchar(200),
    primary key (classname)
 );
 
@@ -104,12 +106,12 @@ create table course_class
 /*==============================================================*/
 create table course_comment
 (
-   jaccount             varchar(20) not null,
+   ID                   varchar(40) not null,
    course_id            varchar(6) not null,
    course_comment_id    int not null,
    course_comment_content varchar(1000),
    course_comment_time  varchar(30),
-   primary key (jaccount, course_id, course_comment_id)
+   primary key (ID, course_id, course_comment_id)
 );
 
 /*==============================================================*/
@@ -133,11 +135,12 @@ create table user
    name                 varchar(20),
    major                varchar(40),
    grade                int,
-   sex                  tinyint,
+   sex                  char(1),
    department           varchar(40),
-   jaccount             varchar(20) not null,
    nickname             varchar(20),
-   primary key (jaccount)
+   ID                   varchar(40) not null,
+   banned               bool,
+   primary key (ID)
 );
 
 /*==============================================================*/
@@ -161,12 +164,12 @@ create table video
 /*==============================================================*/
 create table video_comment
 (
-   jaccount             varchar(20) not null,
+   ID                   varchar(40) not null,
    video_id             int not null,
    video_comment_id     int not null,
    video_comment_content varchar(300),
    video_comment_time   varchar(30),
-   primary key (jaccount, video_id, video_comment_id)
+   primary key (ID, video_id, video_comment_id)
 );
 
 /*==============================================================*/
@@ -175,11 +178,11 @@ create table video_comment
 create table video_report
 (
    video_id             int not null,
-   jaccount             varchar(20) not null,
+   ID                   varchar(40) not null,
    video_report_id      int not null,
    video_report_reason  varchar(300),
    video_report_time    varchar(30),
-   primary key (video_id, jaccount, video_report_id)
+   primary key (video_id, ID, video_report_id)
 );
 
 alter table answer add constraint FK_Relationship_5 foreign key (course_id, question_id)
@@ -191,8 +194,8 @@ alter table class_segments add constraint FK_segment foreign key (classname)
 alter table course_class add constraint FK_Relationship_10 foreign key (course_id)
       references course (course_id) on delete restrict on update restrict;
 
-alter table course_comment add constraint FK_Relationship_2 foreign key (jaccount)
-      references user (jaccount) on delete restrict on update restrict;
+alter table course_comment add constraint FK_Relationship_2 foreign key (ID)
+      references user (ID) on delete restrict on update restrict;
 
 alter table course_comment add constraint FK_Relationship_3 foreign key (course_id)
       references course (course_id) on delete restrict on update restrict;
@@ -200,8 +203,8 @@ alter table course_comment add constraint FK_Relationship_3 foreign key (course_
 alter table question add constraint FK_ask foreign key (course_id)
       references course (course_id) on delete restrict on update restrict;
 
-alter table video_comment add constraint FK_Relationship_6 foreign key (jaccount)
-      references user (jaccount) on delete restrict on update restrict;
+alter table video_comment add constraint FK_Relationship_6 foreign key (ID)
+      references user (ID) on delete restrict on update restrict;
 
 alter table video_comment add constraint FK_Relationship_7 foreign key (video_id)
       references video (video_id) on delete restrict on update restrict;
@@ -209,6 +212,6 @@ alter table video_comment add constraint FK_Relationship_7 foreign key (video_id
 alter table video_report add constraint FK_Relationship_8 foreign key (video_id)
       references video (video_id) on delete restrict on update restrict;
 
-alter table video_report add constraint FK_Relationship_9 foreign key (jaccount)
-      references user (jaccount) on delete restrict on update restrict;
+alter table video_report add constraint FK_Relationship_9 foreign key (ID)
+      references user (ID) on delete restrict on update restrict;
 
