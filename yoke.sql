@@ -61,7 +61,7 @@ create table answer
 create table class_segments
 (
    classname            char(30) not null,
-   class_sec_id         int not null,
+   class_sec_id         int not null auto_increment,
    classroom            varchar(30),
    begin_sec            int,
    end_sec              int,
