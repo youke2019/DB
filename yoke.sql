@@ -81,6 +81,7 @@ create table course
    course_name          varchar(200),
    course_hours         int,
    course_credits       int,
+   course_deptname		varchar(60),
    general              char(1),
    general_type         varchar(20),
    primary key (course_id)
@@ -98,6 +99,8 @@ create table course_class
    course_id            varchar(6),
    course_participants  int,
    class_note           varchar(1000),
+   year                 int,
+   semester             int,
    primary key (classname)
 );
 
