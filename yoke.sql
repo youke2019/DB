@@ -80,7 +80,7 @@ create table course
    course_id            varchar(6) not null,
    course_name          varchar(200),
    course_hours         int,
-   course_credits       int,
+   course_credits       float,
    course_deptname		varchar(60),
    general              char(1),
    general_type         varchar(20),
