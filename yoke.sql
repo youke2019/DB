@@ -1,14 +1,16 @@
-drop schema if exists yoke;
-create schema yoke;
-use yoke;
-
 /*==============================================================*/
 /* DBMS name:      MySQL 5.0                                    */
-/* Created on:     2019/7/8 8:49:29                             */
+/* Created on:     2019/7/12 11:10:52                           */
 /*==============================================================*/
+drop schema if exists yoke;
 
+create schema yoke;
+
+use yoke;
 
 drop table if exists admins;
+
+drop table if exists answe_report;
 
 drop table if exists answer;
 
@@ -20,13 +22,31 @@ drop table if exists course_class;
 
 drop table if exists course_comment;
 
+drop table if exists course_comment_report;
+
+drop table if exists course_evaluate;
+
+drop table if exists like_answer;
+
+drop table if exists like_course;
+
+drop table if exists like_course_comment;
+
+drop table if exists like_question;
+
+drop table if exists like_video;
+
 drop table if exists question;
+
+drop table if exists question_report;
 
 drop table if exists user;
 
 drop table if exists video;
 
 drop table if exists video_comment;
+
+drop table if exists video_comment_report;
 
 drop table if exists video_report;
 
@@ -35,10 +55,24 @@ drop table if exists video_report;
 /*==============================================================*/
 create table admins
 (
-   admin_id             int not null,
+   admin_id             int not null auto_increment,
    account              varchar(20),
    password             varchar(20),
    primary key (admin_id)
+);
+
+/*==============================================================*/
+/* Table: answe_report                                          */
+/*==============================================================*/
+create table answe_report
+(
+   answer_report_reason varchar(300),
+   answer_report_id     int not null auto_increment,
+   ID                   varchar(40),
+   answer_id            int,
+   answer_report_timr   varchar(30),
+   answer_report_ishandle bool,
+   primary key (answer_report_id)
 );
 
 /*==============================================================*/
@@ -46,13 +80,13 @@ create table admins
 /*==============================================================*/
 create table answer
 (
-   course_id            varchar(6) not null,
-   question_id          int not null,
-   answer_id            int not null,
+   answer_id            int not null auto_increment,
+   question_id          int,
    answer_content       varchar(500),
    answer_time          varchar(30),
    answer_user_id       int,
-   primary key (course_id, question_id, answer_id)
+   answer_isbanned      bool,
+   primary key (answer_id)
 );
 
 /*==============================================================*/
@@ -78,12 +112,13 @@ create table class_segments
 create table course
 (
    course_id            varchar(6) not null,
+   ID                   varchar(40),
    course_name          varchar(200),
    course_hours         int,
-   course_credits       float,
-   course_deptname		varchar(60),
+   course_credits       int,
    general              char(1),
    general_type         varchar(20),
+   course_deptname      varchar(60),
    primary key (course_id)
 );
 
@@ -109,12 +144,91 @@ create table course_class
 /*==============================================================*/
 create table course_comment
 (
-   ID                   varchar(40) not null,
-   course_id            varchar(6) not null,
-   course_comment_id    int not null,
    course_comment_content varchar(1000),
    course_comment_time  varchar(30),
-   primary key (ID, course_id, course_comment_id)
+   course_comment_id    int not null auto_increment,
+   course_id            varchar(6),
+   ID                   varchar(40),
+   primary key (course_comment_id)
+);
+
+/*==============================================================*/
+/* Table: course_comment_report                                 */
+/*==============================================================*/
+create table course_comment_report
+(
+   course_comment_report_reason varchar(300),
+   course_comment_report_id int not null auto_increment,
+   course_comment_id    int,
+   ID                   varchar(40),
+   course_comment_report_time varchar(30),
+   course_comment_report_ishandled bool,
+   primary key (course_comment_report_id)
+);
+
+/*==============================================================*/
+/* Table: course_evaluate                                       */
+/*==============================================================*/
+create table course_evaluate
+(
+   course_evaluate_time varchar(30),
+   course_evaluate_id   int not null auto_increment,
+   ID                   varchar(40),
+   course_id            varchar(6),
+   course_evaluate_text varchar(300),
+   course_evaluate_point int,
+   primary key (course_evaluate_id)
+);
+
+/*==============================================================*/
+/* Table: like_answer                                           */
+/*==============================================================*/
+create table like_answer
+(
+   answer_id            int not null,
+   ID                   varchar(40) not null,
+   primary key (answer_id, ID)
+);
+
+/*==============================================================*/
+/* Table: like_course                                           */
+/*==============================================================*/
+create table like_course
+(
+   ID                   varchar(40) not null,
+   course_id            varchar(6) not null,
+   primary key (ID, course_id)
+);
+
+/*==============================================================*/
+/* Table: like_course_comment                                   */
+/*==============================================================*/
+create table like_course_comment
+(
+   ID                   varchar(40) not null,
+   course_comment_id    int not null,
+   primary key (ID, course_comment_id)
+);
+
+/*==============================================================*/
+/* Table: like_question                                         */
+/*==============================================================*/
+create table like_question
+(
+   course_id            varchar(6) not null,
+   question_id          int not null,
+   ID                   varchar(40) not null,
+   primary key (course_id, question_id, ID)
+);
+
+/*==============================================================*/
+/* Table: like_video                                            */
+/*==============================================================*/
+create table like_video
+(
+   video_id             int not null,
+   ID                   varchar(40) not null,
+   primary key (video_id, ID)
 );
 
 /*==============================================================*/
@@ -123,11 +237,26 @@ create table course_comment
 create table question
 (
    course_id            varchar(6) not null,
-   question_id          int not null,
+   question_id          int not null auto_increment,
    question_content     varchar(200),
    question_time        varchar(30),
    question_user_id     int,
-   primary key (course_id, question_id)
+   question_isbanned    bool,
+   primary key (question_id)
+);
+
+/*==============================================================*/
+/* Table: question_report                                       */
+/*==============================================================*/
+create table question_report
+(
+   question_report_reason varchar(300),
+   question_report_id   int not null auto_increment,
+   ID                   varchar(40),
+   question_id          int,
+   question_report_time varchar(30),
+   question_report_ishandled bool,
+   primary key (question_report_id)
 );
 
 /*==============================================================*/
@@ -151,14 +280,15 @@ create table user
 /*==============================================================*/
 create table video
 (
-   video_id             int not null,
+   video_id             int not null auto_increment,
+   ID                   varchar(40),
    post_user_id         varchar(20),
    post_time            varchar(40),
    post_text            varchar(300),
    video_url            varchar(100),
-   is_video             char(1),
-   is_image             char(1),
+   type                 char(1),
    image_url            varchar(30),
+   isbanned             bool,
    primary key (video_id)
 );
 
@@ -167,12 +297,27 @@ create table video
 /*==============================================================*/
 create table video_comment
 (
-   ID                   varchar(40) not null,
-   video_id             int not null,
-   video_comment_id     int not null,
    video_comment_content varchar(300),
    video_comment_time   varchar(30),
-   primary key (ID, video_id, video_comment_id)
+   video_comment_id     int not null auto_increment,
+   ID                   varchar(40),
+   video_id             int,
+   isbanned             bool,
+   primary key (video_comment_id)
+);
+
+/*==============================================================*/
+/* Table: video_comment_report                                  */
+/*==============================================================*/
+create table video_comment_report
+(
+   video_comment_report_reason varchar(300),
+   video_comment_report_id int not null auto_increment,
+   ID                   varchar(40),
+   video_comment_id     int,
+   video_comment_report_time varchar(30),
+   video_comment_report_ishandled bool,
+   primary key (video_comment_report_id)
 );
 
 /*==============================================================*/
@@ -180,37 +325,104 @@ create table video_comment
 /*==============================================================*/
 create table video_report
 (
-   video_id             int not null,
-   ID                   varchar(40) not null,
-   video_report_id      int not null,
    video_report_reason  varchar(300),
+   video_report_id      int not null auto_increment,
+   ID                   varchar(40),
+   video_id             int,
    video_report_time    varchar(30),
-   primary key (video_id, ID, video_report_id)
+   video_report_ishandled bool,
+   primary key (video_report_id)
 );
 
-alter table answer add constraint FK_Relationship_5 foreign key (course_id, question_id)
-      references question (course_id, question_id) on delete restrict on update restrict;
+alter table answe_report add constraint FK_Relationship_11 foreign key (answer_id)
+      references answer (answer_id) on delete restrict on update restrict;
+
+alter table answe_report add constraint FK_report_answer foreign key (ID)
+      references user (ID) on delete restrict on update restrict;
+
+alter table answer add constraint FK_Relationship_5 foreign key (question_id)
+      references question (question_id) on delete restrict on update restrict;
 
 alter table class_segments add constraint FK_segment foreign key (classname)
       references course_class (classname) on delete restrict on update restrict;
 
+alter table course add constraint FK_like_course foreign key (ID)
+      references user (ID) on delete restrict on update restrict;
+
 alter table course_class add constraint FK_Relationship_10 foreign key (course_id)
       references course (course_id) on delete restrict on update restrict;
-
-alter table course_comment add constraint FK_Relationship_2 foreign key (ID)
-      references user (ID) on delete restrict on update restrict;
 
 alter table course_comment add constraint FK_Relationship_3 foreign key (course_id)
       references course (course_id) on delete restrict on update restrict;
 
+alter table course_comment add constraint FK_post_course_comment foreign key (ID)
+      references user (ID) on delete restrict on update restrict;
+
+alter table course_comment_report add constraint FK_Relationship_15 foreign key (course_comment_id)
+      references course_comment (course_comment_id) on delete restrict on update restrict;
+
+alter table course_comment_report add constraint FK_reprot_course_comment foreign key (ID)
+      references user (ID) on delete restrict on update restrict;
+
+alter table course_evaluate add constraint FK_Relationship_19 foreign key (course_id)
+      references course (course_id) on delete restrict on update restrict;
+
+alter table course_evaluate add constraint FK_evaluate_course foreign key (ID)
+      references user (ID) on delete restrict on update restrict;
+
+alter table like_answer add constraint FK_like_answer foreign key (answer_id)
+      references answer (answer_id) on delete restrict on update restrict;
+
+alter table like_answer add constraint FK_like_answer2 foreign key (ID)
+      references user (ID) on delete restrict on update restrict;
+
+alter table like_course add constraint FK_like_course2 foreign key (ID)
+      references user (ID) on delete restrict on update restrict;
+
+alter table like_course add constraint FK_like_course3 foreign key (course_id)
+      references course (course_id) on delete restrict on update restrict;
+
+alter table like_course_comment add constraint FK_like_course_comment foreign key (ID)
+      references user (ID) on delete restrict on update restrict;
+
+alter table like_course_comment add constraint FK_like_course_comment2 foreign key (course_comment_id)
+      references course_comment (course_comment_id) on delete restrict on update restrict;
+
+alter table like_question add constraint FK_like_question foreign key (question_id)
+      references question (question_id) on delete restrict on update restrict;
+
+alter table like_question add constraint FK_like_question2 foreign key (ID)
+      references user (ID) on delete restrict on update restrict;
+
+alter table like_video add constraint FK_like_video foreign key (video_id)
+      references video (video_id) on delete restrict on update restrict;
+
+alter table like_video add constraint FK_like_video2 foreign key (ID)
+      references user (ID) on delete restrict on update restrict;
+
 alter table question add constraint FK_ask foreign key (course_id)
       references course (course_id) on delete restrict on update restrict;
 
-alter table video_comment add constraint FK_Relationship_6 foreign key (ID)
+alter table question_report add constraint FK_Relationship_13 foreign key (question_id)
+      references question (question_id) on delete restrict on update restrict;
+
+alter table question_report add constraint FK_Relationship_14 foreign key (ID)
+      references user (ID) on delete restrict on update restrict;
+
+alter table video add constraint FK_Relationship_22 foreign key (ID)
       references user (ID) on delete restrict on update restrict;
 
 alter table video_comment add constraint FK_Relationship_7 foreign key (video_id)
       references video (video_id) on delete restrict on update restrict;
+
+alter table video_comment add constraint FK_post_video_comment foreign key (ID)
+      references user (ID) on delete restrict on update restrict;
+
+alter table video_comment_report add constraint FK_Relationship_17 foreign key (video_comment_id)
+      references video_comment (video_comment_id) on delete restrict on update restrict;
+
+alter table video_comment_report add constraint FK_Relationship_18 foreign key (ID)
+      references user (ID) on delete restrict on update restrict;
 
 alter table video_report add constraint FK_Relationship_8 foreign key (video_id)
       references video (video_id) on delete restrict on update restrict;
