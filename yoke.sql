@@ -149,6 +149,7 @@ create table course_comment
    course_comment_id    int not null auto_increment,
    course_id            varchar(6),
    ID                   varchar(40),
+   isbanned             boolean,
    primary key (course_comment_id)
 );
 
