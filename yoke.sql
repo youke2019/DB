@@ -1,12 +1,8 @@
 /*==============================================================*/
 /* DBMS name:      MySQL 5.0                                    */
-/* Created on:     2019/7/15 9:47:19                            */
+/* Created on:     2019/7/16 11:21:38                           */
 /*==============================================================*/
-drop schema if exists yoke;
 
-create schema yoke;
-
-use yoke;
 
 drop table if exists admins;
 
@@ -81,10 +77,10 @@ create table answe_report
 create table answer
 (
    answer_id            int not null auto_increment,
+   ID                   varchar(40),
    question_id          int,
    answer_content       varchar(500),
    answer_time          varchar(30),
-   answer_user_id       int,
    answer_isbanned      bool,
    answer_praise_point  int,
    primary key (answer_id)
@@ -95,7 +91,7 @@ create table answer
 /*==============================================================*/
 create table answer_praise
 (
-   answer_praise_id     int not null auto_increment,
+   answer_praise_id     int not null,
    ID                   varchar(40),
    answer_id            int,
    primary key (answer_praise_id)
@@ -171,7 +167,7 @@ create table course_comment
 /*==============================================================*/
 create table course_comment_praise
 (
-   course_comment_praise_id int not null auto_increment,
+   course_comment_praise_id int not null,
    ID                   varchar(40),
    course_comment_id    int,
    primary key (course_comment_praise_id)
@@ -210,7 +206,7 @@ create table course_evaluate
 /*==============================================================*/
 create table course_praise
 (
-   course_praise_id     int not null auto_increment,
+   course_praise_id     int not null,
    ID                   varchar(40),
    course_id            varchar(6),
    primary key (course_praise_id)
@@ -223,9 +219,9 @@ create table question
 (
    question_id          int not null auto_increment,
    course_id            varchar(6),
+   ID                   varchar(40),
    question_content     varchar(200),
    question_time        varchar(30),
-   question_user_id     int,
    question_isbanned    bool,
    question_praise_point int,
    primary key (question_id)
@@ -236,7 +232,7 @@ create table question
 /*==============================================================*/
 create table question_praise
 (
-   question_praise_id   int not null auto_increment,
+   question_praise_id   int not null,
    ID                   varchar(40),
    question_id          int,
    primary key (question_praise_id)
@@ -277,7 +273,7 @@ create table user
 /*==============================================================*/
 create table vedio_praise
 (
-   video_praise_id      int not null auto_increment,
+   video_praise_id      int not null,
    ID                   varchar(40),
    video_id             int,
    primary key (video_praise_id)
@@ -349,6 +345,9 @@ alter table answe_report add constraint FK_Relationship_11 foreign key (answer_i
 alter table answe_report add constraint FK_report_answer foreign key (ID)
       references user (ID) on delete restrict on update restrict;
 
+alter table answer add constraint FK_Relationship_34 foreign key (ID)
+      references user (ID) on delete restrict on update restrict;
+
 alter table answer add constraint FK_Relationship_5 foreign key (question_id)
       references question (question_id) on delete restrict on update restrict;
 
@@ -392,6 +391,9 @@ alter table course_praise add constraint FK_Relationship_25 foreign key (course_
       references course (course_id) on delete restrict on update restrict;
 
 alter table course_praise add constraint FK_Relationship_26 foreign key (ID)
+      references user (ID) on delete restrict on update restrict;
+
+alter table question add constraint FK_Relationship_33 foreign key (ID)
       references user (ID) on delete restrict on update restrict;
 
 alter table question add constraint FK_ask foreign key (course_id)
