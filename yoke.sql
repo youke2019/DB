@@ -1,6 +1,6 @@
 /*==============================================================*/
 /* DBMS name:      MySQL 5.0                                    */
-/* Created on:     2019/7/16 11:21:38                           */
+/* Created on:     2019/7/17 14:48:58                           */
 /*==============================================================*/
 
 
@@ -91,7 +91,7 @@ create table answer
 /*==============================================================*/
 create table answer_praise
 (
-   answer_praise_id     int not null,
+   answer_praise_id     int not null auto_increment,
    ID                   varchar(40),
    answer_id            int,
    primary key (answer_praise_id)
@@ -123,7 +123,7 @@ create table course
    course_name          varchar(200),
    course_hours         int,
    course_credits       int,
-   general              char(1),
+   general              bool,
    general_type         varchar(20),
    course_deptname      varchar(60),
    course_praise_point  int,
@@ -167,7 +167,7 @@ create table course_comment
 /*==============================================================*/
 create table course_comment_praise
 (
-   course_comment_praise_id int not null,
+   course_comment_praise_id int not null auto_increment,
    ID                   varchar(40),
    course_comment_id    int,
    primary key (course_comment_praise_id)
@@ -206,7 +206,7 @@ create table course_evaluate
 /*==============================================================*/
 create table course_praise
 (
-   course_praise_id     int not null,
+   course_praise_id     int not null auto_increment,
    ID                   varchar(40),
    course_id            varchar(6),
    primary key (course_praise_id)
@@ -232,7 +232,7 @@ create table question
 /*==============================================================*/
 create table question_praise
 (
-   question_praise_id   int not null,
+   question_praise_id   int not null auto_increment,
    ID                   varchar(40),
    question_id          int,
    primary key (question_praise_id)
@@ -273,7 +273,7 @@ create table user
 /*==============================================================*/
 create table vedio_praise
 (
-   video_praise_id      int not null,
+   video_praise_id      int not null auto_increment,
    ID                   varchar(40),
    video_id             int,
    primary key (video_praise_id)
