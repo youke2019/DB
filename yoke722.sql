@@ -1,6 +1,6 @@
 /*==============================================================*/
 /* DBMS name:      MySQL 5.0                                    */
-/* Created on:     2019/7/22 8:31:35                            */
+/* Created on:     2019/7/22 14:56:09                           */
 /*==============================================================*/
 
 
@@ -21,6 +21,8 @@ drop table if exists course_class;
 drop table if exists course_comment;
 
 drop table if exists course_comment_praise;
+
+drop table if exists course_comment_reply;
 
 drop table if exists course_comment_report;
 
@@ -173,6 +175,18 @@ create table course_comment_praise
    ID                   varchar(40),
    course_comment_id    int,
    primary key (course_comment_praise_id)
+);
+
+/*==============================================================*/
+/* Table: course_comment_reply                                  */
+/*==============================================================*/
+create table course_comment_reply
+(
+   course_comment_reply_id int not null auto_increment,
+   course_comment_id    int,
+   ID                   varchar(40),
+   course_comment_reply_content varchar(500),
+   primary key (course_comment_reply_id)
 );
 
 /*==============================================================*/
@@ -383,6 +397,12 @@ alter table course_comment_praise add constraint FK_Relationship_23 foreign key 
       references course_comment (course_comment_id) on delete restrict on update restrict;
 
 alter table course_comment_praise add constraint FK_Relationship_24 foreign key (ID)
+      references user (ID) on delete restrict on update restrict;
+
+alter table course_comment_reply add constraint FK_Relationship_37 foreign key (course_comment_id)
+      references course_comment (course_comment_id) on delete restrict on update restrict;
+
+alter table course_comment_reply add constraint FK_Relationship_38 foreign key (ID)
       references user (ID) on delete restrict on update restrict;
 
 alter table course_comment_report add constraint FK_Relationship_15 foreign key (course_comment_id)
