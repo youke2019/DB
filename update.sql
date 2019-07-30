@@ -1,14 +1,13 @@
-drop table if exists course_comment_reply;
+
 /*==============================================================*/
-/* Table: course_comment_reply                                  */
+/* Table: course_recommend_data_model                           */
 /*==============================================================*/
-create table course_comment_reply
+create table course_recommend_data_model
 (
-   course_comment_reply_id int not null auto_increment,
-   course_comment_id    int,
-   ID                   varchar(40),
-   course_comment_reply_content varchar(500),
-   primary key (course_comment_reply_id)
+   recommend_id         int not null auto_increment,
+   user_id              bigint,
+   lcourse_id           bigint,
+   evaluate_point       int,
+   evaluate_time        bigint,
+   primary key (recommend_id)
 );
-alter table course_comment_reply add constraint FK_Relationship_38 foreign key (ID)
-      references user (ID) on delete restrict on update restrict;
