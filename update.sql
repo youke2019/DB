@@ -1,13 +1,32 @@
+/*==============================================================*/
+/* Table: system_message                                        */
+/*==============================================================*/
+create table system_message
+(
+   admin_id             int,
+   content              varchar(3000),
+   image_url            varchar(30),
+   time                 varchar(40),
+   message_id           int not null auto_increment,
+   primary key (message_id)
+);
 
 /*==============================================================*/
-/* Table: course_recommend_data_model                           */
+/* Table: feedback                                              */
 /*==============================================================*/
-create table course_recommend_data_model
+create table feedback
 (
-   recommend_id         int not null auto_increment,
-   user_id              bigint,
-   lcourse_id           bigint,
-   evaluate_point       int,
-   evaluate_time        bigint,
-   primary key (recommend_id)
+   ID                   varchar(40),
+   content              varchar(3000),
+   time                 varchar(40),
+   feedback_id          int not null auto_increment,
+   primary key (feedback_id)
 );
+
+
+
+alter table system_message add constraint FK_Relationship_135 foreign key (admin_id)
+      references admins (admin_id) on delete restrict on update restrict;
+
+alter table feedback add constraint FK_Relationship_136 foreign key (ID)
+      references user (ID) on delete restrict on update restrict;

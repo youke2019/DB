@@ -1,16 +1,16 @@
 /*==============================================================*/
 /* DBMS name:      MySQL 5.0                                    */
-/* Created on:     2019/7/17 14:48:58                           */
+/* Created on:     2019/9/1 15:48:35                            */
 /*==============================================================*/
 
 
 drop table if exists admins;
 
-drop table if exists answe_report;
-
 drop table if exists answer;
 
 drop table if exists answer_praise;
+
+drop table if exists answer_report;
 
 drop table if exists class_segments;
 
@@ -28,21 +28,27 @@ drop table if exists course_evaluate;
 
 drop table if exists course_praise;
 
+drop table if exists course_recommend_data_model;
+
+drop table if exists feedback;
+
 drop table if exists question;
 
 drop table if exists question_praise;
 
 drop table if exists question_report;
 
-drop table if exists user;
+drop table if exists system_message;
 
-drop table if exists vedio_praise;
+drop table if exists user;
 
 drop table if exists video;
 
 drop table if exists video_comment;
 
 drop table if exists video_comment_report;
+
+drop table if exists video_praise;
 
 drop table if exists video_report;
 
@@ -55,20 +61,6 @@ create table admins
    account              varchar(20),
    password             varchar(20),
    primary key (admin_id)
-);
-
-/*==============================================================*/
-/* Table: answe_report                                          */
-/*==============================================================*/
-create table answe_report
-(
-   answer_report_reason varchar(300),
-   answer_report_id     int not null auto_increment,
-   ID                   varchar(40),
-   answer_id            int,
-   answer_report_timr   varchar(30),
-   answer_report_ishandle bool,
-   primary key (answer_report_id)
 );
 
 /*==============================================================*/
@@ -95,6 +87,20 @@ create table answer_praise
    ID                   varchar(40),
    answer_id            int,
    primary key (answer_praise_id)
+);
+
+/*==============================================================*/
+/* Table: answer_report                                         */
+/*==============================================================*/
+create table answer_report
+(
+   answer_report_reason varchar(300),
+   answer_report_id     int not null auto_increment,
+   ID                   varchar(40),
+   answer_id            int,
+   answer_report_time   varchar(30),
+   answer_report_ishandled bool,
+   primary key (answer_report_id)
 );
 
 /*==============================================================*/
@@ -196,7 +202,7 @@ create table course_evaluate
    course_evaluate_id   int not null auto_increment,
    ID                   varchar(40),
    course_id            varchar(6),
-   course_evaluate_text varchar(300),
+   course_evaluate_praise_point int,
    course_evaluate_point int,
    primary key (course_evaluate_id)
 );
@@ -210,6 +216,31 @@ create table course_praise
    ID                   varchar(40),
    course_id            varchar(6),
    primary key (course_praise_id)
+);
+
+/*==============================================================*/
+/* Table: course_recommend_data_model                           */
+/*==============================================================*/
+create table course_recommend_data_model
+(
+   recommend_id         int not null,
+   user_id              bigint,
+   lcourse_id           bigint,
+   evaluate_point       int,
+   evaluate_time        bigint,
+   primary key (recommend_id)
+);
+
+/*==============================================================*/
+/* Table: feedback                                              */
+/*==============================================================*/
+create table feedback
+(
+   ID                   varchar(40),
+   content              varchar(3000),
+   time                 varchar(40),
+   feedback_id          int not null auto_increment,
+   primary key (feedback_id)
 );
 
 /*==============================================================*/
@@ -253,6 +284,19 @@ create table question_report
 );
 
 /*==============================================================*/
+/* Table: system_message                                        */
+/*==============================================================*/
+create table system_message
+(
+   admin_id             int,
+   content              varchar(3000),
+   image_url            varchar(30),
+   time                 varchar(40),
+   message_id           int not null auto_increment,
+   primary key (message_id)
+);
+
+/*==============================================================*/
 /* Table: user                                                  */
 /*==============================================================*/
 create table user
@@ -265,18 +309,9 @@ create table user
    nickname             varchar(20),
    ID                   varchar(40) not null,
    banned               bool,
+   avatar_url           varchar(100),
+   avator_url           varchar(100),
    primary key (ID)
-);
-
-/*==============================================================*/
-/* Table: vedio_praise                                          */
-/*==============================================================*/
-create table vedio_praise
-(
-   video_praise_id      int not null auto_increment,
-   ID                   varchar(40),
-   video_id             int,
-   primary key (video_praise_id)
 );
 
 /*==============================================================*/
@@ -286,7 +321,6 @@ create table video
 (
    video_id             int not null auto_increment,
    ID                   varchar(40),
-   post_user_id         varchar(20),
    post_time            varchar(40),
    post_text            varchar(300),
    video_url            varchar(100),
@@ -326,6 +360,17 @@ create table video_comment_report
 );
 
 /*==============================================================*/
+/* Table: video_praise                                          */
+/*==============================================================*/
+create table video_praise
+(
+   video_praise_id      int not null auto_increment,
+   ID                   varchar(40),
+   video_id             int,
+   primary key (video_praise_id)
+);
+
+/*==============================================================*/
 /* Table: video_report                                          */
 /*==============================================================*/
 create table video_report
@@ -339,12 +384,6 @@ create table video_report
    primary key (video_report_id)
 );
 
-alter table answe_report add constraint FK_Relationship_11 foreign key (answer_id)
-      references answer (answer_id) on delete restrict on update restrict;
-
-alter table answe_report add constraint FK_report_answer foreign key (ID)
-      references user (ID) on delete restrict on update restrict;
-
 alter table answer add constraint FK_Relationship_34 foreign key (ID)
       references user (ID) on delete restrict on update restrict;
 
@@ -356,6 +395,12 @@ alter table answer_praise add constraint FK_Relationship_29 foreign key (ID)
 
 alter table answer_praise add constraint FK_Relationship_30 foreign key (answer_id)
       references answer (answer_id) on delete restrict on update restrict;
+
+alter table answer_report add constraint FK_Relationship_11 foreign key (answer_id)
+      references answer (answer_id) on delete restrict on update restrict;
+
+alter table answer_report add constraint FK_report_answer foreign key (ID)
+      references user (ID) on delete restrict on update restrict;
 
 alter table class_segments add constraint FK_segment foreign key (classname)
       references course_class (classname) on delete restrict on update restrict;
@@ -393,6 +438,9 @@ alter table course_praise add constraint FK_Relationship_25 foreign key (course_
 alter table course_praise add constraint FK_Relationship_26 foreign key (ID)
       references user (ID) on delete restrict on update restrict;
 
+alter table feedback add constraint FK_Relationship_36 foreign key (ID)
+      references user (ID) on delete restrict on update restrict;
+
 alter table question add constraint FK_Relationship_33 foreign key (ID)
       references user (ID) on delete restrict on update restrict;
 
@@ -411,11 +459,8 @@ alter table question_report add constraint FK_Relationship_13 foreign key (quest
 alter table question_report add constraint FK_Relationship_14 foreign key (ID)
       references user (ID) on delete restrict on update restrict;
 
-alter table vedio_praise add constraint FK_Relationship_31 foreign key (ID)
-      references user (ID) on delete restrict on update restrict;
-
-alter table vedio_praise add constraint FK_Relationship_32 foreign key (video_id)
-      references video (video_id) on delete restrict on update restrict;
+alter table system_message add constraint FK_Relationship_35 foreign key (admin_id)
+      references admins (admin_id) on delete restrict on update restrict;
 
 alter table video add constraint FK_Relationship_22 foreign key (ID)
       references user (ID) on delete restrict on update restrict;
@@ -431,6 +476,12 @@ alter table video_comment_report add constraint FK_Relationship_17 foreign key (
 
 alter table video_comment_report add constraint FK_Relationship_18 foreign key (ID)
       references user (ID) on delete restrict on update restrict;
+
+alter table video_praise add constraint FK_Relationship_31 foreign key (ID)
+      references user (ID) on delete restrict on update restrict;
+
+alter table video_praise add constraint FK_Relationship_32 foreign key (video_id)
+      references video (video_id) on delete restrict on update restrict;
 
 alter table video_report add constraint FK_Relationship_8 foreign key (video_id)
       references video (video_id) on delete restrict on update restrict;
